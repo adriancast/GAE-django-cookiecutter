@@ -1,0 +1,9 @@
+{
+    "project_name": "Name of your project",
+    "secret_key": "Django secret key",
+    "db_connection_name": "Connection name of the DB. Run 'gcloud sql instances describe [YOUR_INSTANCE_NAME]'. From the output, copy the connectionName value",
+    "db_name": "GCP Database name",
+    "db_user": "GCP Database connection username",
+    "db_password": "GCP Database connection password",
+    "_extensions": ["jinja2_time.TimeExtension"]
+}
