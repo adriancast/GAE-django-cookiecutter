@@ -151,7 +151,7 @@ if os.getenv('GAE_APPLICATION', None):
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
             'HOST': '/'.join(['/cloudsql', os.getenv('DB_CONNECTION_NAME')]),
-            'USER': os.getenv('DB_USERNAME'),
+            'USER': os.getenv('DB_USER'),
             'PASSWORD': os.getenv('DB_PASSWORD'),
             'NAME': os.getenv('DB_NAME')
         }
