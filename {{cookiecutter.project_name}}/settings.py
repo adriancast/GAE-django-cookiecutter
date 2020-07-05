@@ -11,6 +11,12 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import environ
+
+ROOT = environ.Path(__file__).path('../' * 2)
+ENV = environ.Env(DJANGO_DEBUG=(bool, False), )
+if os.path.isfile(ROOT('.env')):
+    environ.Env.read_env(ROOT('.env'))
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -73,12 +79,14 @@ WSGI_APPLICATION = '{{cookiecutter.project_name}}.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
+# Uncomment if you want to use a local sqlite database
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
 
 
 # Password validation
@@ -134,7 +142,7 @@ if os.getenv('GAE_APPLICATION', None):
       production. You can find this script under /{{cookiecutter.project_name}}/cloud_sql_proxy
       
       $ chmod +x cloud_sql_proxy  # make sure the script can execute
-      $ ./cloud_sql_proxy -instances="{{cookiecutter.db_connection_name}}"=tcp:3306
+      $ ./cloud_sql_proxy -instances="{{cookiecutter.db_connection_name}}"=tcp:5432
       
     
     - At this point, you will be able to update your database executing the migrations:
@@ -151,8 +159,19 @@ if os.getenv('GAE_APPLICATION', None):
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
             'HOST': '/'.join(['/cloudsql', os.getenv('DB_CONNECTION_NAME')]),
-            'USER': os.getenv('DB_USERNAME'),
+            'USER': os.getenv('DB_USER'),
             'PASSWORD': os.getenv('DB_PASSWORD'),
             'NAME': os.getenv('DB_NAME')
+        }
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'HOST': '127.0.0.1',
+            'PORT': '5432',
+            'NAME': ENV('DB_NAME'),
+            'USER': ENV('DB_USER'),
+            'PASSWORD': ENV('DB_PASSWORD'),
         }
     }
